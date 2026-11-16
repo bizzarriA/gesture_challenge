@@ -10,6 +10,9 @@ fa parte della challenge.
 1. **accuracy** sul test il più alta possibile, con una rete di **meno di 300k
    parametri**;
 2. **FLOPs** il più bassi possibile: a parità di accuracy vince la rete con meno FLOPs.
+3. **Params** il più basso possibile: a parità di accuracy e FLOPs vince la rete con meno parametri.
+
+**NOTA BENE**: per *parità di accuracy* si intente stessa accuratezza con un $\pm5\%$.
 
 I FLOPs si contano per **un frame** (la rete classifica un frame alla volta), cioè per
 un passaggio in avanti con un ingresso, con `evaluate.count_flops` (Keras o PyTorch),
@@ -82,11 +85,12 @@ Se usate `pos_events`, l'allineamento con i frame di `roi` è a vostro carico: i
 partono dal primo evento ROI della registrazione e coprono al massimo le sue prime 1.5 s
 (vedi il protocollo sotto).
 
-## Protocollo (fwdPass)
+## Protocollo
 
-Ogni registrazione è una sequenza di `T` frame. La rete classifica **un frame alla volta**
-e la predizione sulla registrazione è la media delle probabilità dei suoi frame
-(soft majority vote).
+Ogni registrazione è una sequenza di `T` frame. 
+La rete può classificare un frame alla volta o blocchi di frame e la predizione sulla registrazione è la media delle probabilità dei suoi frame, o dei suoi blocchi di frame (soft majority vote).
+Attenzione che più frame alla volta significa rete più profonda e quindi più grande! Si tratta di trovare il miglior compromesso; è importatne anche considerare che ogni esempio ha due canali, uno per polarità positiva (la luce sul sensore aumenta) e uno per polarità negative (la luce diminuisce).
+Le polarità possono essere mantenute entrambe come canali separati (il più informativo e che generalmente da i migliori risultati), ma è possibile anche tenere una polarità sola, o ad esempio sottrarle per ridurre la dimensionalità. A voi la scelta.
 
 Di ogni registrazione si usano solo le **prime 1.5 s** (le registrazioni più corte
 vengono scartate). Come dividerle in frame lo scegliete voi, ma **train e test devono

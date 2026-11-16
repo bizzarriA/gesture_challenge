@@ -293,6 +293,6 @@ modello.
 
 ## File
 
-- `data.py` – caricamento del dataset (stesso preprocessing del Symbolic DNN-Tuner)
+- `data.py` – caricamento del dataset
 - `evaluate.py` – metrica ufficiale, conteggio di parametri e FLOPs
 - `img/` – le animazioni di questo README
